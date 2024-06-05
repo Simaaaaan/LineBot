@@ -63,7 +63,8 @@ def handle_message(event):
         "Furosemide": "呋塞米，是一種利尿劑，用於治療水腫和高血壓。",
         "Warfarin": "華法林，是一種抗凝劑，用於預防血栓形成。",
         "Citalopram": "西酞普蘭，是一種SSRI，用於治療抑鬱症和焦慮症。",
-        "Monte
+        "Montelukast": "孟魯司特，用於預防哮喘和治療過敏性鼻炎。"
+    }
     if msg in questions_answers:
         response = questions_answers[msg]
     else:
