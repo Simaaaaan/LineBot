@@ -43,53 +43,53 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text
-    questions_answers = {
-        "apple": "蘋果",
-        "banana": "香蕉",
-        "cat": "貓",
-        "dog": "狗",
-        "elephant": "大象",
-        "flower": "花",
-        "guitar": "吉他",
-        "house": "房子",
-        "ice": "冰",
-        "tiger": "虎",
-        "jacket": "夾克",
-        "keyboard": "鍵盤",
-        "lemon": "檸檬",
-        "monkey": "猴子",
-        "notebook": "筆記本",
-        "orange": "橙子",
-        "piano": "鋼琴",
-        "queen": "女王",
-        "rabbit": "兔子",
-        "sun": "太陽",
-        "tree": "樹",
-        "umbrella": "雨傘",
-        "violin": "小提琴",
-        "whale": "鯨魚",
-        "xylophone": "木琴",
-        "yacht": "遊艇",
-        "zebra": "斑馬",
-        "bread": "麵包",
-        "car": "車",
-        "duck": "鴨子",
-        "你最近的感覺如何？": "我大多數時候感到焦慮和壓力很大。",
-        "你能描述一下你目前的心情嗎？": "我經常感到悲傷和沮喪。",
-        "你最近經歷過什麼重大生活變化嗎？": "是的，我最近搬到了一個新城市工作。",
-        "你通常如何應對壓力？": "我通常會試圖通過愛好或鍛煉來分散注意力，但這並不總是有效。",
-        "你有可以依靠的支持系統嗎？": "我有幾個可以談心的親密朋友和家人。",
-        "你喜歡做哪些活動？": "我喜歡閱讀、遠足和畫畫。",
-        "你有注意到你的睡眠模式有變化嗎？": "是的，我最近一直很難入睡和保持睡眠。",
-        "你對這次心理輔導有什麼目標？": "我希望學會更好地管理壓力，並提高我的整體幸福感。",
-        "還有什麼你認為我應該知道的嗎？": "我有時覺得自己不夠好，這影響了我的自信心。"
-    }
-    if msg in questions_answers:
-        #print(f"{english_word} 的中文翻譯是：{words_dict[english_word]}")
-    
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(questions_answers[msg]))
-    else:
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(msg))
+    if msg == "查詢圖書":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="請輸入您要查詢的圖書名稱或作者。")
+        )
+    elif "查詢圖書:" in msg:
+        book_name = msg.replace("查詢圖書:", "").strip()
+        books = search_books(book_name)
+        reply = "我們找到以下與“{}”相關的書籍：\n".format(book_name)
+        for i, book in enumerate(books):
+            reply += "{}. {}\n".format(i+1, book['title'])
+        reply += "請輸入您想了解的書籍編號，或者輸入“返回”返回主菜單。"
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply)
+        )
+    elif msg == "預約座位":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="請選擇您要預約的日期（格式：YYYY-MM-DD）。")
+        )
+    elif re.match(r"\d{4}-\d{2}-\d{2}", msg):
+        date = msg.strip()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(
+                text="請選擇您要預約的時間段：\n1. 上午（09:00-12:00）\n2. 下午（13:00-17:00）\n3. 晚上（18:00-21:00）"
+            )
+        )
+    elif msg in ["1", "2", "3"]:
+        timeslot = {"1": "上午（09:00-12:00）", "2": "下午（13:00-17:00）", "3": "晚上（18:00-21:00）"}[msg]
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="您已成功預約。感謝您的使用！")
+        )
+    elif msg == "查詢借閱狀態":
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="請輸入您的借閱證號碼。")
+        )
+    elif re.match(r"\d+", msg):
+        card_number = msg.strip()
+        borrow_status = get_borrow_status(card_number)
+        reply = "您當前借閱的書籍有：\n"
+        for book in borrow_status:
+            reply += "{} - 歸還期限：{}\n".format(book['title'], book['due_date'])
+        reply += "請輸入“續借”以延長借閱期限，或者輸入“返回
        
          
 
