@@ -42,28 +42,28 @@ def callback():
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    msg = event.message.text
+    msg = event.message.text.strip().lower()
     questions_answers = {
-        "Aspirin": "阿司匹林，用於減輕疼痛、發燒和炎症。",
-        "Ibuprofen": "布洛芬，是一種非甾體抗炎藥，用於減輕疼痛、發燒和炎症。",
-        "Acetaminophen": "對乙酰氨基酚，用於減輕疼痛和發燒。",
-        "Amoxicillin": "阿莫西林，是一種抗生素，用於治療細菌感染。",
-        "Lisinopril": "拉西利普利，是一種ACE抑制劑，用於治療高血壓和心力衰竭。",
-        "Metformin": "二甲雙胍，用於治療2型糖尿病。",
-        "Omeprazole": "奧美拉唑，用於治療胃酸過多和胃食管反流病。",
-        "Simvastatin": "辛伐他汀，用於降低膽固醇和甘油三酯水平。",
-        "Metoprolol": "美托洛爾，是一種β受體阻滯劑，用於治療高血壓、心絞痛和心律失常。",
-        "Albuterol": "沙丁胺醇，用於緩解哮喘和慢性阻塞性肺疾病（COPD）的症狀。",
-        "Atorvastatin": "阿托伐他汀，用於降低膽固醇和甘油三酯水平。",
-        "Gabapentin": "加巴噴丁，用於治療癲癇和神經性疼痛。",
-        "Levothyroxine": "左旋甲狀腺素，用於治療甲狀腺功能減退。",
-        "Hydrochlorothiazide": "氫氯噻嗪，用於治療高血壓和水腫。",
-        "Sertraline": "舍曲林，是一種選擇性5-羥色胺再攝取抑制劑（SSRI），用於治療抑鬱症、焦慮症和強迫症。",
-        "Losartan": "氯沙坦，用於治療高血壓和腎病。",
-        "Furosemide": "呋塞米，是一種利尿劑，用於治療水腫和高血壓。",
-        "Warfarin": "華法林，是一種抗凝劑，用於預防血栓形成。",
-        "Citalopram": "西酞普蘭，是一種SSRI，用於治療抑鬱症和焦慮症。",
-        "Montelukast": "孟魯司特，用於預防哮喘和治療過敏性鼻炎。"
+         "aspirin": "阿司匹林，用於減輕疼痛、發燒和炎症。",
+        "ibuprofen": "布洛芬，是一種非甾體抗炎藥，用於減輕疼痛、發燒和炎症。",
+        "acetaminophen": "對乙酰氨基酚，用於減輕疼痛和發燒。",
+        "amoxicillin": "阿莫西林，是一種抗生素，用於治療細菌感染。",
+        "lisinopril": "拉西利普利，是一種ACE抑制劑，用於治療高血壓和心力衰竭。",
+        "metformin": "二甲雙胍，用於治療2型糖尿病。",
+        "omeprazole": "奧美拉唑，用於治療胃酸過多和胃食管反流病。",
+        "simvastatin": "辛伐他汀，用於降低膽固醇和甘油三酯水平。",
+        "metoprolol": "美托洛爾，是一種β受體阻滯劑，用於治療高血壓、心絞痛和心律失常。",
+        "albuterol": "沙丁胺醇，用於緩解哮喘和慢性阻塞性肺疾病（COPD）的症狀。",
+        "atorvastatin": "阿托伐他汀，用於降低膽固醇和甘油三酯水平。",
+        "gabapentin": "加巴噴丁，用於治療癲癇和神經性疼痛。",
+        "levothyroxine": "左旋甲狀腺素，用於治療甲狀腺功能減退。",
+        "hydrochlorothiazide": "氫氯噻嗪，用於治療高血壓和水腫。",
+        "sertraline": "舍曲林，是一種選擇性5-羥色胺再攝取抑制劑（SSRI），用於治療抑鬱症、焦慮症和強迫症。",
+        "losartan": "氯沙坦，用於治療高血壓和腎病。",
+        "furosemide": "呋塞米，是一種利尿劑，用於治療水腫和高血壓。",
+        "warfarin": "華法林，是一種抗凝劑，用於預防血栓形成。",
+        "citalopram": "西酞普蘭，是一種SSRI，用於治療抑鬱症和焦慮症。",
+        "montelukast": "孟魯司特，用於預防哮喘和治療過敏性鼻炎。"
     }
     if msg in questions_answers:
         response = questions_answers[msg]
