@@ -1,50 +1,35 @@
 from flask import Flask, request, abort
-
-from linebot import (
-    LineBotApi, WebhookHandler
-)
-from linebot.exceptions import (
-    InvalidSignatureError
-)
+from linebot import LineBotApi, WebhookHandler
+from linebot.exceptions import InvalidSignatureError
 from linebot.models import *
 
-#======python的函數庫==========
-import tempfile, os
-import datetime
-import time
-import traceback
-#======python的函數庫==========
+import os
 
 app = Flask(__name__)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
+
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
 
-
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
 def callback():
-    # get X-Line-Signature header value
     signature = request.headers['X-Line-Signature']
-    # get request body as text
     body = request.get_data(as_text=True)
     app.logger.info("Request body: " + body)
-    # handle webhook body
     try:
         handler.handle(body, signature)
     except InvalidSignatureError:
         abort(400)
     return 'OK'
 
-
 # 處理訊息
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
-    msg = event.message.text.strip().lower()
-    
-       medications_info = {
+    msg = event.message.text.strip().lower()  # 去除多餘的空格並轉換為小寫
+
+    medications_info = {
         "aspirin": {
             "description": "阿司匹林，用於減輕疼痛、發燒和炎症。",
             "dosage": "一般劑量為每次 325-650 毫克，每 4-6 小時一次。",
@@ -151,38 +136,42 @@ def handle_message(event):
             "description": "西酞普蘭，是一種選擇性5-羥色胺再攝取抑制劑（SSRI），用於治療抑鬱症和焦慮症。",
             "dosage": "成人通常起始劑量為 20 毫克，每天一次。",
             "usage": "口服，可隨餐或空腹服用。",
-            "precautions": "避免突然停藥，可能引起戒斷症状。"
+            "precautions": "避免突然停藥，可能引起戒斷症狀。"
         }
-        # 添加更多藥物的信息
+        # 添加更多藥物的信息...
     }
 
     if msg in medications_info:
         med_info = medications_info[msg]
-        response = f"{med_info['description']}\n\n用量：{med_info['dosage']}\n服用方法：{med_info['usage']}\n注意事項：{med_info['precautions']}"
+        response = (
+            f"{med_info['description']}\n\n"
+            f"用量：{med_info['dosage']}\n"
+            f"服用方法：{med_info['usage']}\n"
+            f"注意事項：{med_info['precautions']}"
+        )
     else:
         response = "對不起，我不太明白你的意思。"
-        
+
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=response)
     )
 
+# 處理PostbackEvent
 @handler.add(PostbackEvent)
-def handle_message(event):
+def handle_postback(event):
     print(event.postback.data)
 
-
+# 處理成員加入事件
 @handler.add(MemberJoinedEvent)
 def welcome(event):
     uid = event.joined.members[0].user_id
     gid = event.source.group_id
     profile = line_bot_api.get_group_member_profile(gid, uid)
     name = profile.display_name
-    message = TextSendMessage(text=f'{name}歡迎加入')
+    message = TextSendMessage(text=f'{name} 歡迎加入')
     line_bot_api.reply_message(event.reply_token, message)
-        
-        
-import os
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
