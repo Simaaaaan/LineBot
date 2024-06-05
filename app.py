@@ -9,19 +9,16 @@ from linebot.exceptions import (
 from linebot.models import *
 
 #======python的函數庫==========
-import tempfile, os
+import os
+import re
 import datetime
-import time
-import traceback
 #======python的函數庫==========
 
 app = Flask(__name__)
-static_tmp_path = os.path.join(os.path.dirname(__file__), 'static', 'tmp')
 # Channel Access Token
 line_bot_api = LineBotApi(os.getenv('CHANNEL_ACCESS_TOKEN'))
 # Channel Secret
 handler = WebhookHandler(os.getenv('CHANNEL_SECRET'))
-
 
 # 監聽所有來自 /callback 的 Post Request
 @app.route("/callback", methods=['POST'])
@@ -89,8 +86,8 @@ def handle_message(event):
         reply = "您當前借閱的書籍有：\n"
         for book in borrow_status:
             reply += "{} - 歸還期限：{}\n".format(book['title'], book['due_date'])
-        reply += "請輸入“續借”以延長借閱期限，或者輸入“返回
-                line_bot_api.reply_message(
+        reply += "請輸入“續借”以延長借閱期限，或者輸入“返回”返回主菜單。"
+        line_bot_api.reply_message(
             event.reply_token,
             TextSendMessage(text=reply)
         )
@@ -135,7 +132,6 @@ def extend_borrowing():
 def handle_message(event):
     print(event.postback.data)
 
-
 @handler.add(MemberJoinedEvent)
 def welcome(event):
     uid = event.joined.members[0].user_id
@@ -144,9 +140,7 @@ def welcome(event):
     name = profile.display_name
     message = TextSendMessage(text=f'{name}歡迎加入')
     line_bot_api.reply_message(event.reply_token, message)
-        
-        
-import os
+
 if __name__ == "__main__":
     port = int(os.environ.get('PORT', 5000))
     app.run(host='0.0.0.0', port=port)
