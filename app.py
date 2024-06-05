@@ -90,8 +90,46 @@ def handle_message(event):
         for book in borrow_status:
             reply += "{} - 歸還期限：{}\n".format(book['title'], book['due_date'])
         reply += "請輸入“續借”以延長借閱期限，或者輸入“返回
-       
-         
+                line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text=reply)
+        )
+    elif msg == "續借":
+        extend_borrowing()
+        line_bot_api.reply_message(
+            event.reply_token,
+            TextSendMessage(text="您的借閱期限已延長。")
+        )
+    else:
+        questions_answers = {
+            "apple": "蘋果",
+            "banana": "香蕉",
+            "cat": "貓",
+            "dog": "狗",
+            # ... existing questions_answers ...
+        }
+        if msg in questions_answers:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(questions_answers[msg]))
+        else:
+            line_bot_api.reply_message(event.reply_token, TextSendMessage(msg))
+
+def search_books(query):
+    books = [
+        {'title': '哈利波特與魔法石'},
+        {'title': '哈利波特與密室'},
+        {'title': '哈利波特與阿茲卡班的囚徒'}
+    ]
+    return books
+
+def get_borrow_status(card_number):
+    borrow_status = [
+        {'title': '大數據時代', 'due_date': '2024-06-15'},
+        {'title': '人工智能簡史', 'due_date': '2024-06-20'}
+    ]
+    return borrow_status
+
+def extend_borrowing():
+    pass
 
 @handler.add(PostbackEvent)
 def handle_message(event):
