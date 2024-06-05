@@ -97,7 +97,7 @@ def handle_message(event):
             "precautions": "避免大量飲用葡萄柚汁，監測肝功能。"
         },
         "gabapentin": {
-            "description": "加巴噴丁，用於治療癲癇和神經性疼痛。",
+            "description": "加巴噴丁，用於癲癇發作之輔助療法和成人帶狀疱疹後神經痛。",
             "dosage": "成人通常起始劑量為 300 毫克，每天三次。",
             "usage": "口服，可隨餐或空腹服用。",
             "precautions": "避免突然停藥，可能引起癲癇發作。"
