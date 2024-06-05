@@ -43,6 +43,7 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def handle_message(event):
     msg = event.message.text.strip().lower()
+    
        medications_info = {
         "aspirin": {
             "description": "阿司匹林，用於減輕疼痛、發燒和炎症。",
@@ -160,6 +161,7 @@ def handle_message(event):
         response = f"{med_info['description']}\n\n用量：{med_info['dosage']}\n服用方法：{med_info['usage']}\n注意事項：{med_info['precautions']}"
     else:
         response = "對不起，我不太明白你的意思。"
+        
     line_bot_api.reply_message(
         event.reply_token,
         TextSendMessage(text=response)
